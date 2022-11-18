@@ -8,3 +8,7 @@
     --color-primary: var(--color-purple);
   }
 }
+
+.path {
+  clip-path: inset(0 -100vmax);
+}
