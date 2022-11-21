@@ -1,23 +1,23 @@
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
+import { useUserStore } from '../stores/user'
 import supabase from '../supabase'
 
 export const useArticles = ({ selectString = '*', targetId = '' }) => {
   const loading = ref(false)
   const results = ref([])
-  const doFetch = () => {
+  const doFetch = async () => {
     loading.value = true
     let query = supabase
       .from('article')
       .select(selectString)
-      .eq('isPublic', true)
-    
+
     if (targetId) {
       query = query.eq('id', targetId)
+        .single()
     }
-    query.then(res => {
-      loading.value = false
-      results.value = res.data
-    })
+    const { data } = await query
+    loading.value = false
+    results.value = data
   }
   doFetch()
   return {
@@ -27,22 +27,96 @@ export const useArticles = ({ selectString = '*', targetId = '' }) => {
   }
 }
 
-export const useUser = () => {
+export const useComment = ({ article_id }) => {
   const loading = ref(false)
-  const results = ref(null)
   const error = ref(false)
-  const doFetch = () => {
+  const comments = ref([])
+
+  const addComment = async ({ content, user_id }) => {
     loading.value = true
-    supabase.auth.getUser()
-      .then(res => {
-        loading.value = false
-        results.value = res.data.user
-      })
+    const { error: commentError } = await supabase.from('comment')
+      .insert([{ content, article_id, user_id }])
+    loading.value = false
+    if (commentError?.message) error.value = commentError.message
+    await getComment()
   }
-  doFetch()
+
+  const deleteComment = async ({ id }) => {
+    loading.value = true
+    const { error: commentError } = await supabase.from('comment')
+      .delete()
+      .eq('id', id)
+    loading.value = false
+    if (commentError?.message) error.value = commentError.message
+    await getComment()
+  }
+
+  const getComment = async () => {
+    loading.value = true
+    const { data, error: commentError } = await supabase
+      .from('comment')
+      .select('content, id, user_id, profiles(username))')
+      .eq('article_id', article_id)
+    loading.value = false
+    comments.value = data
+    if (commentError?.message) error.value = commentError.message
+  }
+
+  onBeforeMount(getComment)
   return {
-    reload: doFetch,
+    deleteComment,
+    addComment,
     loading,
-    results
+    error,
+    comments
+  }
+}
+
+export const useProfile = () => {
+  const loading = ref(false)
+  const errMsg = ref('')
+  const store = useUserStore()
+  const doFetch = async () => {
+    loading.value = true
+    errMsg.value = ''
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('username,id')
+      .eq('id', store.id)
+      .single()
+    loading.value = false
+    if (error?.message) {
+      errMsg.value = error.message
+    } else {
+      store.username = data.username
+    }
+  }
+  return {
+    fetchProfile: doFetch,
+    loading,
+    errMsg
+  }
+}
+
+export const useArticle = ({ user_id }) => {
+  const loading = ref(false)
+  const addArticle = async ({ title, description, content, is_published }) => {
+    loading.value = true
+    const { data, error } = await supabase.from('article')
+      .insert([{ title, description, content, is_published, user_id }])
+    loading.value = false
+  }
+
+  const updateArticle = async (updateContent, { article_id }) => {
+    loading.value = true
+    await supabase.from('article')
+      .update(updateContent)
+      .eq('id', article_id)
+    loading.value = false
+  }
+  return {
+    addArticle,
+    loading,
+    updateArticle
   }
 }

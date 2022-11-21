@@ -4,7 +4,7 @@
       <p class=" text-center"><i class='bx bx-md bx-loader-alt bx-spin' ></i></p>
     </div>
     <ul v-else>
-      <li v-for="article in results" :key="article.id">
+      <li class=" pb-5 border-b-2" v-for="article in results" :key="article.id">
         <h2 class="text-xl leading-loose">{{article.title}}</h2>
         <p>{{ article.description }}</p>
         <p class=" text-right">
