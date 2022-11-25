@@ -1,8 +1,9 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '../stores/user'
 import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
@@ -16,6 +17,15 @@ const router = createRouter({
       props: true
     },
     {
+      path: '/edit/:id',
+      name: 'editArticle',
+      meta: {
+        requireAuth: true
+      },
+      component: () => import('../views/EditArticleView.vue'),
+      props: true
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue')
@@ -23,12 +33,28 @@ const router = createRouter({
     {
       path: '/new',
       name: 'newPost',
+      meta: {
+        requireAuth: true
+      },
       component: () => import('../views/NewArticle.vue')
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      meta: {
+        requireAuth: true
+      },
+      component: () => import('../views/DashboardView.vue')
     },
     {
       path: '/signup',
       name: 'signup',
       component: () => import('../views/SignupView.vue')
+    },
+    {
+      path: '/pending',
+      name: 'pending',
+      component: () => import('../views/PendingView.vue')
     },
     {
       path: '/:pathMatch(.*)*',
@@ -37,6 +63,18 @@ const router = createRouter({
       }
     }
   ]
+})
+
+router.beforeEach((to, from) => {
+  const store = useUserStore()
+  if (to.meta.requireAuth && !store.id) {
+    return {
+      path: '/pending',
+      query: {
+        redirect: to.fullPath
+      }
+    }
+  }
 })
 
 export default router

@@ -2,7 +2,7 @@ import { onBeforeMount, ref } from 'vue'
 import { useUserStore } from '../stores/user'
 import supabase from '../supabase'
 
-export const useArticles = ({ selectString = '*', targetId = '' }) => {
+export const useArticles = ({ selectString = '*', targetId = '', user_id = '' }) => {
   const loading = ref(false)
   const results = ref([])
   const doFetch = async () => {
@@ -14,6 +14,9 @@ export const useArticles = ({ selectString = '*', targetId = '' }) => {
     if (targetId) {
       query = query.eq('id', targetId)
         .single()
+    }
+    if (user_id) {
+      query = query.eq('user_id', user_id)
     }
     const { data } = await query
     loading.value = false

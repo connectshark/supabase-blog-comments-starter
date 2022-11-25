@@ -1,7 +1,5 @@
 <template>
-  <main>
-
-    <form @submit.prevent="addArticleHandler" class=" mx-auto w-11/12">
+    <form @submit.prevent="addArticleHandler">
       <div>
         <p>
           <label for="article_title">Title</label>
@@ -35,7 +33,6 @@
         </button>
       </div>
     </form>
-  </main>
 </template>
 
 <script setup>

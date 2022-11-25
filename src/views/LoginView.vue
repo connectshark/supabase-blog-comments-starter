@@ -1,5 +1,5 @@
 <template>
-  <h2 class=" bg-primary py-10 text-white text-center font-bold text-3xl mb-8 leading-loose">登入</h2>
+  <h2 class=" bg-primary py-10 text-white text-center font-bold text-3xl mb-8 leading-loose shadow-[0_0_0_100vmax_#7a6ae1] path">登入</h2>
   <div class=" max-w-lg mx-auto w-5/6">
     <form class="mb-4" @submit.prevent="handlerLogin">
       <p class="mb-4">
@@ -48,6 +48,7 @@ const handlerLogin = async () => {
     email: loginData.email,
     password: loginData.password
   })
+  if (errMsg.value !== '') return 
   await fetchProfile()
 
   router.push('/')

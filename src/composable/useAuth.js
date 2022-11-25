@@ -2,7 +2,6 @@ import { onBeforeMount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
 import supabase from '../supabase'
-import { useProfile } from './api-core'
 
 const useLogin = () => {
   const errMsg = ref('')
@@ -133,7 +132,7 @@ const useLogout = () => {
     store.id = ''
     store.username = ''
   }
-  if (route.meta?.requiresAuth) {
+  if (route.meta?.requireAuth) {
     router.push('/login')
   }
   return {
@@ -144,20 +143,22 @@ const useLogout = () => {
 
 const useLoginState = () => {
   const store = useUserStore()
-  const { fetchProfile } = useProfile()
   const errMsg = ref('')
+  const loading = ref(false)
   const getUser = async () => {
+    loading.value = true
     const { data: { user }, error } = await supabase.auth.getUser()
     if (error?.message) {
       errMsg.value = error.message
     } else {
-      store.id = user?.id
-      await fetchProfile()
+      store.id = user.id
     }
+    loading.value = false
   }
-  onBeforeMount(getUser)
   return {
-    errMsg
+    errMsg,
+    loading,
+    getUser
   }
 }
 
