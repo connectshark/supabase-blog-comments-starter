@@ -1,0 +1,1 @@
+import{u as a,a as n,o as l,f as o,h as t,t as i,g as c,F as u}from"./index-e9fa2f22.js";import"./browser-ponyfill-5ce9a37a.js";const p=t("p",null,null,-1),h={__name:"EditArticleView",props:{id:String},setup(e){const s=e;a();const{results:r,loading:d}=n({selectString:"*",targetId:s.id});return(_,g)=>(l(),o(u,null,[p,t("h2",null,i(c(r).title),1)],64))}};export{h as default};

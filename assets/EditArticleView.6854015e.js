@@ -1,1 +1,0 @@
-import{u as a,a as n,o as l,f as o,h as e,t as c,g as i,F as u}from"./index.1d62df07.js";const p=e("p",null,null,-1),f={__name:"EditArticleView",props:{id:String},setup(t){const s=t;a();const{results:r,loading:d}=n({selectString:"*",targetId:s.id});return(_,g)=>(l(),o(u,null,[p,e("h2",null,c(i(r).title),1)],64))}};export{f as default};
