@@ -82,22 +82,41 @@ export const useProfile = () => {
   const doFetch = async () => {
     loading.value = true
     errMsg.value = ''
-    const { data, error } = await supabase
+    const { data: { session } } = await supabase.auth.getSession()
+    const { data: userData, error } = await supabase
       .from('profiles')
-      .select('username,id')
-      .eq('id', store.id)
+      .select('*')
+      .eq('id', session.user.id)
       .single()
     loading.value = false
     if (error?.message) {
       errMsg.value = error.message
     } else {
-      store.username = data.username
+      store.user.id = userData.id
+      store.user.email = userData.email
+      store.user.username = userData.username
+      store.user.avatar = userData.avatar_url
+    }
+  }
+
+  const updateEmail = async (newEmail) => {
+    loading.value = true
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ email: newEmail })
+      .eq('id', store.user.id)
+    loading.value = false
+    if (error?.message) {
+      errMsg.value = error.message
+    } else {
+      store.user.email = newEmail
     }
   }
   return {
     fetchProfile: doFetch,
     loading,
-    errMsg
+    errMsg,
+    updateEmail
   }
 }
 

@@ -6,6 +6,7 @@
   :root {
     --color-purple: 122 106 225;
     --color-primary: var(--color-purple);
+    --color-facebook: 66 103 178;
   }
 }
 

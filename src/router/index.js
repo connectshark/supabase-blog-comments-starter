@@ -26,17 +26,20 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/LoginView.vue')
-    },
-    {
       path: '/new',
       name: 'newPost',
       meta: {
         requireAuth: true
       },
       component: () => import('../views/NewArticle.vue')
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      meta: {
+        requireAuth: true
+      },
+      component: () => import('../views/ProfileView.vue')
     },
     {
       path: '/dashboard',
@@ -47,14 +50,14 @@ const router = createRouter({
       component: () => import('../views/DashboardView.vue')
     },
     {
-      path: '/signup',
-      name: 'signup',
-      component: () => import('../views/SignupView.vue')
-    },
-    {
-      path: '/pending',
-      name: 'pending',
-      component: () => import('../views/PendingView.vue')
+      path: '/callback',
+      name: 'callback',
+      props: route => {
+        return {
+          path: route.query.redirect
+        }
+      },
+      component: () => import('../views/CallbackView.vue')
     },
     {
       path: '/:pathMatch(.*)*',
@@ -67,9 +70,9 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   const store = useUserStore()
-  if (to.meta.requireAuth && !store.id) {
+  if (to.meta.requireAuth && !store.isLogin) {
     return {
-      path: '/pending',
+      path: '/callback',
       query: {
         redirect: to.fullPath
       }

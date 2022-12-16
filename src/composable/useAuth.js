@@ -1,4 +1,4 @@
-import { onBeforeMount, ref } from 'vue'
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
 import supabase from '../supabase'
@@ -55,14 +55,13 @@ const useSignUp = () => {
   }
 }
 
-const useFBLogin = () => {
-  const path = import.meta.env.VITE_CALLBACK_URL + '/callback/'
-
+const useFBLogin = ({ path }) => {
   const doFetch = async () => {
+    const redirectTo = import.meta.env.VITE_CALLBACK_URL + '/callback?redirect=' + path
     await supabase.auth.signInWithOAuth({
       provider: 'facebook',
       options: {
-        redirectTo: path
+        redirectTo
       }
     })
   }
@@ -129,11 +128,13 @@ const useLogout = () => {
   const store = useUserStore()
   const doLogout = async () => {
     await supabase.auth.signOut()
-    store.id = ''
-    store.username = ''
-  }
-  if (route.meta?.requireAuth) {
-    router.push('/login')
+    store.user.id = ''
+    store.user.email = ''
+    store.user.username = ''
+    store.user.avatar = ''
+    if (route.meta?.requireAuth) {
+      router.replace('/')
+    }
   }
   return {
     loading,
