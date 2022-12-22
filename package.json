@@ -12,8 +12,9 @@
     "url": "https://github.com/connectshark"
   },
   "dependencies": {
-    "@formkit/auto-animate": "^1.0.0-beta.3",
-    "@supabase/supabase-js": "^2.2.0",
+    "@formkit/auto-animate": "^1.0.0-beta.5",
+    "@supabase/supabase-js": "^2.2.1",
+    "@vueuse/core": "^9.8.2",
     "pinia": "^2.0.28",
     "vue": "^3.2.33",
     "vue-router": "^4.1.6"
@@ -24,6 +25,6 @@
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.20",
     "tailwindcss": "^3.2.4",
-    "vite": "^4.0.1"
+    "vite": "^4.0.3"
   }
 }
