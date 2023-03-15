@@ -8,13 +8,7 @@
 ![https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D)
 ![https://img.shields.io/badge/tailwindcss-35495E?style=for-the-badge&logo=tailwindcss&logoColor=38BCF8](https://img.shields.io/badge/tailwindcss-35495E?style=for-the-badge&logo=tailwindcss&logoColor=38BCF8)
 
-快速開發模板架構
+## 專案簡介
 
-## 專案已安裝內容
-
-- vite
-- vue3
-- pinia
-- vue-router4
-- tailwindcss
-- github action自動部署至 `gh-page`
+supabase實作部落格文章評論新增刪除等功能
+目前已無此supabase專案
